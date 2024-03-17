@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Nurse - HEALHEALTH</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: hsl(35, 80%, 70%);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        form {
+            text-align: center;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Find Nurse</h1>
+        <form action="{{ url_for('search_nurse') }}" method="GET">
+            <label for="location">Preferred Location:</label>
+            <input type="text" id="location" name="location" placeholder="Enter preferred location" required>
+            <label for="specialization">Preferred Specialization:</label>
+            <select id="specialization" name="specialization" required>
+                <option value="">Select specialization</option>
+                <option value="General">General</option>
+                <option value="Pediatric">Pediatric</option>
+                <option value="Elderly Care">Elderly Care</option>
+            </select>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+</body>
+</html>
