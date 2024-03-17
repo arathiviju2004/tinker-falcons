@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nurse Finder</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-image: url('https://media.istockphoto.com/id/1161120722/vector/bright-mustard-yellow-color-background-vector-illustration.jpg?s=612x612&w=0&k=20&c=0cHZifd3A954ngpnsnDBceZevdOuNla-b0K7kqwIEkc=');
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            color: #333; 
+        }
+
+        .cont1{
+            align-self: center;
+            align-items: center;
+        }
+        .container {
+            height: 40vh; /* Full viewport height. Adjust as needed. */
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.8); 
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 800px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+        }
+        input[type="text"],
+        select {
+            width: 10%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        button {
+            /* padding: 10px 20px; */
+            border: none;
+            border-radius: 10px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        form {
+            text-align: center;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .findnurse{
+            text-align: center;
+            font-family: 'Roboto', sans-serif;
+        }
+        .button1{
+            text-align: center;
+        }
+        #results {
+            margin-top: 20px;
+        }
+        .nurse {
+            border: 1px solid #ddd;
+            background-color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Soft shadow for each nurse div */
+            transition: transform 0.2s; /* Smooth transition for hover effect */
+        }
+        .nurse:hover {
+            transform: translateY(-5px); /* Slight lift effect on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="cont1">
+    <div class="container">
+    <div class="findnurse"><h2>Find a Nurse</h2></div>
+    <form id="searchForm">
+        <label for="location" style="width: 100px; display: inline-block" >Location:</label>
+        <input type="text" id="location" name="location" style="width: 400px;height: 30px; display: inline;">
+        <br><br>
+
+        <label for="specialization"style="width: 100px; display: inline-block">Specialization:</label>
+        <select id="specialization" name="specialization" style="width: 400px; height: 35px; display: inline;">
+            <option value="">Any Specialization</option>
+            <option value="">Select specialization</option>
+            <option value="Pediatric Nurse">Pediatric Nurse</option>
+            <option value="Geriatric Nurse">Geriatric Nurse</option>
+            <option value="Surgical Nurse">Surgical Nurse</option>
+            <option value="Emergency Nurse">Emergency Nurse</option>
+        </select>
+        <br><br>
+        <div class ="button1">
+        <button type="button" onclick="searchNurses()" style="width: 100px;height: 40px;display:inline;;">Search</button>
+        </div>
+    </form>
+    </div>
+    <div id="results">
+    </div>
+
+    <script>
+        async function searchNurses() {
+            const locationInput = document.getElementById('location').value.toLowerCase();
+            const specializationInput = document.getElementById('specialization').value.toLowerCase();
+
+            try {
+                // Adjust the path to your 'nurses.json' file as necessary
+                const response = await fetch('/nurses.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const nurses = await response.json();
+
+                const filteredNurses = nurses.filter(nurse => {
+                    const matchesLocation = nurse.location.toLowerCase().includes(locationInput);
+                    const matchesSpecialization = specializationInput === '' || nurse.specialization.toLowerCase() === specializationInput;
+                    return matchesLocation && matchesSpecialization;
+                });
+
+                displayResults(filteredNurses);
+            } catch (error) {
+                console.error('Could not load the nurse data:', error);
+            }
+        }
+
+        function displayResults(nurses) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = ''; // Clear previous results
+
+            if (nurses.length === 0) {
+                resultsDiv.innerHTML = '<p>No nurses found. Please try different search criteria.</p>';
+                return;
+            }
+
+            nurses.forEach(nurse => {
+                const nurseDiv = document.createElement('div');
+                nurseDiv.classList.add('nurse');
+                nurseDiv.innerHTML = `
+                    <h3>${nurse.name}</h3>
+                    <p>Location: ${nurse.location}</p>
+                    <p>Age: ${nurse.age}</p>
+                    <p>Specialization: ${nurse.specialization}</p>
+                `;
+                resultsDiv.appendChild(nurseDiv);
+            });
+        }
+    </script>
+    </div>
+</body>
+</html>
